@@ -2,20 +2,34 @@ syntax = "proto3";
 
 option csharp_namespace = "WeatherForecast.Api";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
 
 package weatherForecast;
 
 
 service Weather {
   rpc GetWeatherForecastStream (WeatherForecastRequest) returns (stream WeatherForecast);
+  rpc GetWeatherForecastByDate (stream WeatherForecastByDateRequest) returns (GetWeatherForecastByDateReply);
+  rpc GetWeatherForecastByDateStream (stream WeatherForecastByDateRequest) returns (stream WeatherForecast);
 }
 
 message WeatherForecastRequest {
   int32 numberOfDays = 1;
+  google.protobuf.Duration delay = 2;
+}
+
+message WeatherForecastByDateRequest {
+  google.protobuf.Timestamp date = 1;
+  google.protobuf.Duration delay = 2;
 }
 
 message WeatherForecast {
   google.protobuf.Timestamp date = 1;
   int32 temperatureC = 2;
-  string summary = 4;
+  string summary = 3;
+}
+
+message GetWeatherForecastByDateReply {
+  repeated WeatherForecast weatherForecasts = 1;
 }
